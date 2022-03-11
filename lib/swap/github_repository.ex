@@ -1,5 +1,7 @@
-defmodule Swap.Schemas.GithubRepository do
+defmodule Swap.GithubRepository do
   use Ecto.Schema
+
+  alias Swap.GithubRepository.ListAll
 
   schema "github_repository" do
     field :name, :string
@@ -8,8 +10,10 @@ defmodule Swap.Schemas.GithubRepository do
     timestamps()
   end
 
-  def changeset(struct, params \\ %{}) do
-    struct
+  defdelegate list_all, to: ListAll, as: :call
+
+  def changeset(params) do
+    %__MODULE__{}
     |> Ecto.Changeset.cast(params, [:name, :owner, :last_checked_at])
     |> Ecto.Changeset.validate_required([:name, :owner])
   end

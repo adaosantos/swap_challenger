@@ -1,14 +1,10 @@
 alias Swap.Repo
-alias Swap.Schemas.GithubRepository
+alias Swap.GithubRepository
 
 Repo.delete_all(GithubRepository)
 
-Swap.Schemas.GithubRepository.changeset(
-  %Swap.Schemas.GithubRepository{},
-  %{ name: "phoenix", owner: "phoenixframework" })
-|> Swap.Repo.insert
+Swap.GithubRepository.changeset(%{ name: "phoenix", owner: "phoenixframework" })
+  |> Swap.Repo.insert
 
-Swap.Schemas.GithubRepository.changeset(
-  %Swap.Schemas.GithubRepository{},
-  %{ name: "elixir", owner: "elixir-lang" })
-|> Swap.Repo.insert
+Swap.GithubRepository.changeset(%{ name: "elixir", owner: "elixir-lang" })
+  |> Swap.Repo.insert

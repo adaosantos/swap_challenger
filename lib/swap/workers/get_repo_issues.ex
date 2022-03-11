@@ -5,6 +5,6 @@ defmodule Swap.Workers.GetRepoIssues do
 
   @impl true
   def perform(args) do
-    IO.inspect(args)
+    
   end
 end
