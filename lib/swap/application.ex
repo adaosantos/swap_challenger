@@ -14,7 +14,8 @@ defmodule Swap.Application do
     children = [
       # Starts a worker by calling: Swap.Worker.start_link(arg)
       # {Swap.Worker, arg}
-      Swap.Repo
+      Swap.Repo,
+      {Kiq, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

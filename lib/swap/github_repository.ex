@@ -4,9 +4,9 @@ defmodule Swap.GithubRepository do
   alias Swap.GithubRepository.ListAll
 
   schema "github_repository" do
-    field :name, :string
-    field :owner, :string
-    field :last_checked_at, :naive_datetime
+    field(:name, :string)
+    field(:owner, :string)
+    field(:last_checked_at, :naive_datetime)
     timestamps()
   end
 
