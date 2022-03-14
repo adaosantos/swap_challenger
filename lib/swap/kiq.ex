@@ -4,5 +4,6 @@ defmodule Swap.Kiq do
   use Kiq,
     pool_size: 5,
     queues: [default: 25],
-    periodics: [{"* * * * *", Swap.Workers.GetRepoIssues}]
+    periodics: [{"* * * * *", Swap.Workers.GetRepoIssues}],
+    extra_reporters: [Swap.Kiq.Reporter]
 end

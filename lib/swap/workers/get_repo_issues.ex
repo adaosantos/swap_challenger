@@ -2,6 +2,7 @@ defmodule Swap.Workers.GetRepoIssues do
   require Logger
 
   alias Swap.GithubRepository
+  alias Swap.Workers.InvokeHook
 
   use Kiq.Worker, queue: "default"
 
@@ -11,25 +12,25 @@ defmodule Swap.Workers.GetRepoIssues do
     |> Enum.map(&get_issues/1)
   end
 
-  defp get_issues(%GithubRepository{} = repository) do
-    url =
-      repository
+  def get_issues(%GithubRepository{} = repository) do
+    repository
       |> build_url
-
-    case HTTPoison.get(url) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        Jason.decode!(body, keys: :atoms)
-
-      {:ok, %HTTPoison.Response{status_code: 404}} ->
-        Logger.warning("Repository #{repository.owner}/#{repository.name} not found :(")
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        Logger.error(reason)
-    end
+      |> Swap.Github.Client.get
+      |> extract_issues
+      |> enqueue
   end
 
-  defp build_url(%GithubRepository{} = repository) do
-    api_url = Application.get_env(:swap, :github)[:url]
-    "#{api_url}/repos/#{repository.owner}/#{repository.name}/issues"
+  def build_url(%GithubRepository{} = repository) do
+    "/repos/#{repository.owner}/#{repository.name}/issues"
   end
+
+  def extract_issues({:error, %HTTPoison.Error{reason: reason}}), do: Logger.error(reason); {:error}
+  def extract_issues({:ok, %HTTPoison.Response{status_code: 404}}), do: Logger.error("Repository not found :("); {:error}
+  def extract_issues({:ok, %HTTPoison.Response{status_code: 200, body: body}}), do: {:ok,  issues: body }
+
+  def enqueue({:ok, issues: issues}) when is_binary(issues) do
+    InvokeHook.new(issues) |> Swap.Kiq.enqueue(in: 60 * 60 * 24)
+  end
+
+  def enqueue({:error}), do: nil
 end
