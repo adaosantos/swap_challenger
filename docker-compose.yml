@@ -14,7 +14,7 @@ services:
       DB_PORT: 5432
       DB_HOST: database
       DB_NAME: swap_dev
-      REDIS_URL: redis://localhost
+      REDIS_URL: redis://redis
     command: mix run --no-halt
     depends_on:
       - postgres
