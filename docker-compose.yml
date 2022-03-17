@@ -12,7 +12,7 @@ services:
       DB_USER: swap
       DB_PASSWORD: secret
       DB_PORT: 5432
-      DB_HOST: database
+      DB_HOST: postgres
       DB_NAME: swap_dev
       REDIS_URL: redis://redis
     command: mix run --no-halt
