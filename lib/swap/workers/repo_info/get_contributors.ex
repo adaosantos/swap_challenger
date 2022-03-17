@@ -13,13 +13,20 @@ defmodule Swap.Workers.RepoInfo.GetContributors do
     "/repos/#{repository.owner}/#{repository.name}/contributors"
   end
 
-  defp parse({:error, %HTTPoison.Error{reason: reason}}), do: Logger.error(reason)
-  {:error}
+  defp parse({:error, %HTTPoison.Error{reason: reason}}) do
+    Logger.error(reason)
+    {:error}
+  end
 
-  defp parse({:ok, %HTTPoison.Response{status_code: 404}}),
-    do: Logger.error("Repository not found :(")
+  defp parse({:ok, %HTTPoison.Response{status_code: 401}}) do
+    Logger.error("Unauthorized :(")
+    {:error}
+  end
 
-  {:error}
+  defp parse({:ok, %HTTPoison.Response{status_code: 404}}) do
+    Logger.error("Repository not found :(")
+    {:error}
+  end
 
   defp parse({:ok, %HTTPoison.Response{status_code: 200, body: body}}) do
     contributors =

@@ -1,6 +1,6 @@
 defmodule Swap.Workers.RepoInfo.GetIssues do
   require Logger;
-  
+
   alias Swap.GithubRepository
 
   def call(%GithubRepository{} = repository) do
@@ -14,13 +14,20 @@ defmodule Swap.Workers.RepoInfo.GetIssues do
     "/repos/#{repository.owner}/#{repository.name}/issues"
   end
 
-  defp parse({:error, %HTTPoison.Error{reason: reason}}), do: Logger.error(reason)
-  {:error}
+  defp parse({:error, %HTTPoison.Error{reason: reason}}) do
+    Logger.error(reason)
+    {:error}
+  end
 
-  defp parse({:ok, %HTTPoison.Response{status_code: 404}}),
-    do: Logger.error("Repository not found :(")
+  defp parse({:ok, %HTTPoison.Response{status_code: 401}}) do
+    Logger.error("Unauthorized :(")
+    {:error}
+  end
 
-  {:error}
+  defp parse({:ok, %HTTPoison.Response{status_code: 404}}) do
+    Logger.error("Repository not found :(")
+    {:error}
+  end
 
   defp parse({:ok, %HTTPoison.Response{status_code: 200, body: body}}) do
     issues =
