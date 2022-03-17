@@ -15,7 +15,7 @@ services:
       DB_HOST: database
       DB_NAME: swap_dev
       REDIS_URL: redis://localhost
-    command: mix phx.server
+    command: mix run --no-halt
     depends_on:
       - postgres
       - redis
