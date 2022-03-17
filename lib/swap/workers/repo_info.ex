@@ -22,14 +22,13 @@ defmodule Swap.Workers.RepoInfo do
   end
 
   defp enqueue({:ok, user: user, repo_id: repo_id, issues: issues, contributors: contributors}) do
-    # (in: 60 * 60 * 24)
     InvokeHook.new([
       user,
       repo_id,
       issues,
       contributors
-      ]) |> Swap.Kiq.enqueue()
+      ]) |> Swap.Kiq.enqueue(in: 60 * 60 * 24)
   end
 
-  defp enqueue({:error}), do: nil
+  defp enqueue(_), do: nil
 end
