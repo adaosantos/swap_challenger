@@ -16,5 +16,6 @@ defmodule Swap.GithubRepository do
     %__MODULE__{}
     |> Ecto.Changeset.cast(params, [:name, :owner, :last_checked_at])
     |> Ecto.Changeset.validate_required([:name, :owner])
+    |> Ecto.Changeset.unique_constraint([:name, :owner])
   end
 end

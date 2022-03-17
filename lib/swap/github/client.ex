@@ -22,6 +22,7 @@ defmodule Swap.Github.Client do
   defp auth_headers, do: [Authorization: "Basic #{credentials()}"]
 
   defp credentials do
-    "#{Application.get_env(:swap, :github)[:username]}:#{Application.get_env(:swap, :github)[:access_token]}" |> Base.encode64
+    "#{Application.get_env(:swap, :github)[:username]}:#{Application.get_env(:swap, :github)[:access_token]}"
+    |> Base.encode64()
   end
 end
