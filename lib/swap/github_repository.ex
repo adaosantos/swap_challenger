@@ -7,6 +7,7 @@ defmodule Swap.GithubRepository do
     field(:name, :string)
     field(:owner, :string)
     field(:last_checked_at, :naive_datetime)
+    has_many(:actions, Swap.Action, on_delete: :delete_all)
     timestamps()
   end
 
