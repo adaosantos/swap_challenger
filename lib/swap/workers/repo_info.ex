@@ -27,7 +27,7 @@ defmodule Swap.Workers.RepoInfo do
       repo_id,
       issues,
       contributors
-      ]) |> Swap.Kiq.enqueue(in: 60 * 60 * 24)
+      ]) |> Swap.Kiq.enqueue#(in: 60 * 60 * 24)
   end
 
   defp enqueue(_), do: nil

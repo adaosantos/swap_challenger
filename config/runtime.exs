@@ -10,3 +10,8 @@ config :swap, Swap.Repo,
   hostname: System.get_env("DB_HOST") || "localhost",
   port: System.get_env("DB_PORT") || 5432,
   database: System.get_env("DB_NAME") || "swap_#{Mix.env()}"
+
+config :swap, :github,
+  url: "https://api.github.com",
+  username: System.fetch_env!("GITHUB_USERNAME"),
+  access_token: System.fetch_env!("GITHUB_TOKEN")
